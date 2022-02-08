@@ -6,8 +6,8 @@ function ShowMe_isolate(map, regs)
 %     regs - a  1 x R vector of region indices for this atlas
 % 
 % FORMAT ShowMe_isolate(map, regs) identifies regions indexed by regs in
-% brain atlas map (1 = Tal, 2 = AAL, 3 = BA) and isolates these regions
-% into separate image files.
+% brain atlas map (1 = Tal, 2 = AAL, 3 = AAL3, 4 = BA) and isolates these
+% regions into separate image files.
 % 
 % Further information:
 %     help ShowMe_display
@@ -15,11 +15,12 @@ function ShowMe_isolate(map, regs)
 % Exemplary usage:
 %     TellMe_analysis(1,[1:1105]) -> requires ca. 2.746 GB of disk space!!!
 %     TellMe_analysis(2,[1:116])
-%     TellMe_analysis(3,[1:48])
+%     TellMe_analysis(3,[1:170])
+%     TellMe_analysis(4,[1:48])
 % 
 % Author: Joram Soch, BCCN Berlin
 % E-Mail: joram.soch@bccn-berlin.de
-% Date  : 28/01/2016, 09:40
+% Date  : 28/01/2016, 09:40 / 08/02/2022, 14:58
 
 
 %=========================================================================%
@@ -29,18 +30,18 @@ function ShowMe_isolate(map, regs)
 % Load TellMe configurations
 %-------------------------------------------------------------------------%
 load TellMe_config.mat          % home_dir
-load TellMe_defaults.mat        % maps(1,2,3)
+load TellMe_defaults.mat        % maps(1-4)
 
 % Read input arguments if necessary
 %-------------------------------------------------------------------------%
 if nargin < 1 || isempty(map)
-    map = spm_input('Brain map:',1,'b',{'Tal','AAL','BA'},[1 2 3]);
+    map = spm_input('Brain map:',1,'b',{'Tal','AAL','AAL3','BA'},[1 2 3 4]);
 end;
 if nargin < 2 || isempty(regs)
     regs = spm_input('Region indices:','+1','r','[1 2 3]');
 end;
 
-if ismember(map,[1 2 3])
+if ismember(map,[1 2 3 4])
 
 % Assign brain map name
 %-------------------------------------------------------------------------%

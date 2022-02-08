@@ -7,8 +7,8 @@ function TellMe_table(map, fname)
 % 
 % FORMAT TellMe_table(map, fname) fetches the currently displayed table
 % from the SPM results window, identifies the regions in brain atlas map
-% (1 = Tal, 2 = AAL, 3 = BA) belonging to the coordinates x, y, z in each
-% row of the table and saves the results as an Excel file into fname.
+% (1 = Tal, 2 = AAL, 3 = AAL3, 4 = BA) belonging to the coordinates x, y, z
+% in each table row and saves the results as an Excel file into fname.
 % 
 % Further information:
 %     help TellMe
@@ -17,11 +17,12 @@ function TellMe_table(map, fname)
 % Exemplary usage:
 %     TellMe_table(1, 'results_Tal.xls')
 %     TellMe_table(2, 'results_AAL.xls')
-%     TellMe_table(3, 'results_BA.xls')
+%     TellMe_table(3, 'results_AAL3.xls')
+%     TellMe_table(4, 'results_BA.xls')
 % 
 % Author: Joram Soch, BCCN Berlin
 % E-Mail: joram.soch@bccn-berlin.de
-% Date  : 02/02/2022, 09:59
+% Date  : 02/02/2022, 09:59 / 08/02/2022, 11:22
 
 
 %=========================================================================%
@@ -31,12 +32,12 @@ function TellMe_table(map, fname)
 % Load TellMe configurations
 %-------------------------------------------------------------------------%
 load TellMe_config.mat          % home_dir
-load TellMe_defaults.mat        % maps(1,2,3)
+load TellMe_defaults.mat        % maps(1-4)
 
 % Read input arguments if necessary
 %-------------------------------------------------------------------------%
 if nargin < 1 || isempty(map)
-    map = spm_input('Brain map:',1,'b',{'Tal','AAL','BA'},[1 2 3]);
+    map = spm_input('Brain map:',1,'b',{'Tal','AAL','AAL3','BA'},[1 2 3 4]);
 end;
 if nargin < 2 || isempty(fname)
     fname = spm_input('Output filename:','+1','s',sprintf('results_%s.xls', maps(map).name));
@@ -49,7 +50,7 @@ catch
     return
 end;
 
-if ismember(map,[1 2 3])
+if ismember(map,[1 2 3 4])
 
 % Assign brain map name
 %-------------------------------------------------------------------------%
@@ -129,7 +130,7 @@ for i = rows
         tar_vox = round(map_orig + xyz./map_size);
         if all(tar_vox > [0 0 0]) && all(tar_vox < map_dims)
             tar_reg = map_img(tar_vox(1), tar_vox(2), tar_vox(3));
-            if map == 3 && xyz(1) > 0, tar_reg = tar_reg + 48; end;
+            if map == 4 && xyz(1) > 0, tar_reg = tar_reg + 48; end;
         else
             tar_reg = 0;
         end;
@@ -158,7 +159,8 @@ fprintf('   - selected map: ');
 switch map
     case 1, fprintf('Tal = Talairach atlas label data image');
     case 2, fprintf('AAL = Automated Anatomical Labeling');
-    case 3, fprintf('BA = Brodmann area classification');
+    case 3, fprintf('AAL3 = Automated Anatomical Labeling, Version 3');
+    case 4, fprintf('BA = Brodmann area classification');
 end;
 fprintf('\n');
 fprintf('   - output filename: %s.\n', fname);

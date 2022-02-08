@@ -8,9 +8,9 @@ function TellMe_analysis(map, xyz, ncr1, ncr2)
 %     ncr2 - the number of closest regions (by center coordinates) to show
 % 
 % FORMAT TellMe_analysis(map, xyz, ncr1, ncr2) identifies the region at
-% position xyz (MNI in mm) in brain atlas map (1 = Tal, 2 = AAL, 3 = BA)
-% and lists ncr1 regions one voxel of which is closest and ncr2 regions
-% the centers of which are closest to  xyz.
+% position xyz (MNI in mm) in brain atlas map (1 = Tal, 2 = AAL, 3 = AAL3,
+% 4 = BA) and lists ncr1 regions one voxel of which is closest and ncr2
+% regions the centers of which are closest to xyz.
 % 
 % Further information:
 %     help TellMe
@@ -18,11 +18,12 @@ function TellMe_analysis(map, xyz, ncr1, ncr2)
 % Exemplary usage:
 %     TellMe_analysis(1, [0 0 0], 10, 10)
 %     TellMe_analysis(2, [7 41 16], 10, 0)
-%     TellMe_analysis(3, [-45 24 -9], 0, 10)
+%     TellMe_analysis(3, [7 41 16], 0, 10)
+%     TellMe_analysis(4, [-45 24 -9], 0, 0)
 % 
 % Author: Joram Soch, BCCN Berlin
 % E-Mail: joram.soch@bccn-berlin.de
-% Date  : 14/01/2016, 05:15
+% Date  : 14/01/2016, 05:15 / 08/02/2022, 11:14
 
 
 %=========================================================================%
@@ -32,12 +33,12 @@ function TellMe_analysis(map, xyz, ncr1, ncr2)
 % Load TellMe configurations
 %-------------------------------------------------------------------------%
 load TellMe_config.mat          % home_dir
-load TellMe_defaults.mat        % maps(1,2,3)
+load TellMe_defaults.mat        % maps(1-4)
 
 % Read input arguments if necessary
 %-------------------------------------------------------------------------%
 if nargin < 1 || isempty(map)
-    map = spm_input('Brain map:',1,'b',{'Tal','AAL','BA'},[1 2 3]);
+    map = spm_input('Brain map:',1,'b',{'Tal','AAL','AAL3','BA'},[1 2 3 4]);
 end;
 if nargin < 2 || isempty(xyz)
     xyz = spm_input('MNI coordinates [mm]:','+1','r','[0 0 0]');
@@ -49,7 +50,7 @@ if nargin < 4 || isempty(ncr2)
     ncr2 = spm_input('Number of closest regions (by center):','+1','i','10');
 end;
 
-if ismember(map,[1 2 3])
+if ismember(map,[1 2 3 4])
 
 % Assign brain map name
 %-------------------------------------------------------------------------%
@@ -92,7 +93,7 @@ map_unit = maps(map).unit;      % brain map unit name
 tar_vox = round(map_orig + xyz./map_size);
 if all(tar_vox > [0 0 0]) && all(tar_vox < map_dims)
     tar_reg = map_img(tar_vox(1), tar_vox(2), tar_vox(3));
-    if map == 3 && xyz(1) > 0, tar_reg = tar_reg + 48; end;
+    if map == 4 && xyz(1) > 0, tar_reg = tar_reg + 48; end;
 else
     tar_reg = 0;
 end;
@@ -126,7 +127,8 @@ fprintf('   - selected map: ');
 switch map
     case 1, fprintf('Tal = Talairach atlas label data image');
     case 2, fprintf('AAL = Automated Anatomical Labeling');
-    case 3, fprintf('BA = Brodmann area classification');
+    case 3, fprintf('AAL3 = Automated Anatomical Labeling, Version 3');
+    case 4, fprintf('BA = Brodmann area classification');
 end;
 fprintf('\n');
 fprintf('   - target location: ');
@@ -137,7 +139,7 @@ fprintf('[%d %d %d] vx \n', tar_vox(1), tar_vox(2), tar_vox(3));
 %-------------------------------------------------------------------------%
 fprintf('\n');
 if tar_reg == 0                 % no match
-    an = ''; if map == 2, an = 'n'; end;
+    an = ''; if ismember(map,[2 3]), an = 'n'; end;
     fprintf(2,'-> These coordinates do not refer to a%s %s: \n', an, map_unit);
     fprintf(2,'   %s - no region available for these coordinates. \n', int2str0(tar_reg,num_digs));
 else                            % region found
@@ -150,11 +152,11 @@ end;
 %-------------------------------------------------------------------------%
 if ncr1 > num_regs, ncr1 = num_regs; end;
 if ncr1 > 0
-    fprintf('\n-> These are the %s regions ONE VOXEL OF WHICH is closests to this point:\n', num2str(ncr1));
+    fprintf('\n-> These are the %s regions ONE VOXEL OF WHICH is closest to this point:\n', num2str(ncr1));
     reg_inds = []; j = 1;
     while numel(reg_inds) < ncr1
         vox_reg = M(vox_dist(j,1));
-        if map == 3 && XYZ(1,vox_dist(j,1)) > 0, vox_reg = vox_reg + 48; end;
+        if map == 4 && XYZ(1,vox_dist(j,1)) > 0, vox_reg = vox_reg + 48; end;
         if vox_reg ~= 0 && ~ismember(vox_reg,reg_inds)
             reg_inds = [reg_inds vox_reg];
             fprintf('   %s - %s - %s - ', int2str0(nums(vox_reg),num_digs), abbr{vox_reg}, name{vox_reg});
@@ -169,7 +171,7 @@ end;
 %-------------------------------------------------------------------------%
 if ncr2 > num_regs, ncr2 = num_regs; end;
 if ncr2 > 0
-    fprintf('\n-> These are the %s regions THE CENTERS OF WHICH are closests to this point:\n', num2str(ncr2));
+    fprintf('\n-> These are the %s regions THE CENTERS OF WHICH are closest to this point:\n', num2str(ncr2));
     for j = 1:ncr2
         reg_num = reg_dist(j,1);
         fprintf('   %s - %s - %s - ', int2str0(nums(reg_num),num_digs), abbr{reg_num}, name{reg_num});

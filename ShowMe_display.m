@@ -6,8 +6,8 @@ function ShowMe_display(map, regs)
 %     regs - a  1 x R vector of region indices for this atlas
 % 
 % FORMAT ShowMe_display(map, regs) identifies regions indexed by regs in
-% brain atlas map (1 = Tal, 2 = AAL, 3 = BA) and displays these regions
-% using the SPM CheckReg function.
+% brain atlas map (1 = Tal, 2 = AAL, 3 = AAL 3, 4 = BA) and displays these
+% regions using SPM's CheckReg function.
 % 
 % Further information:
 %     help ShowMe
@@ -15,11 +15,12 @@ function ShowMe_display(map, regs)
 % Exemplary usage:
 %     ShowMe_display(1,[1:10])
 %     ShowMe_display(2,[35 36 37 38])
-%     ShowMe_display(3,[1:3 5,7 4,6])
+%     ShowMe_display(3,[41 42 43 44])
+%     ShowMe_display(4,[1:3 5,7 4,6])
 % 
 % Author: Joram Soch, BCCN Berlin
 % E-Mail: joram.soch@bccn-berlin.de
-% Date  : 28/01/2016, 09:55
+% Date  : 28/01/2016, 09:55 / 08/02/2022, 14:54
 
 
 %=========================================================================%
@@ -29,18 +30,18 @@ function ShowMe_display(map, regs)
 % Load TellMe configurations
 %-------------------------------------------------------------------------%
 load TellMe_config.mat          % home_dir
-load TellMe_defaults.mat        % maps(1,2,3)
+load TellMe_defaults.mat        % maps(1-4)
 
 % Read input arguments if necessary
 %-------------------------------------------------------------------------%
 if nargin < 1 || isempty(map)
-    map = spm_input('Brain map:',1,'b',{'Tal','AAL','BA'},[1 2 3]);
+    map = spm_input('Brain map:',1,'b',{'Tal','AAL','AAL3','BA'},[1 2 3 4]);
 end;
 if nargin < 2 || isempty(regs)
     regs = spm_input('Region indices:','+1','r','[1 2 3]');
 end;
 
-if ismember(map,[1 2 3])
+if ismember(map,[1 2 3 4])
 
 % Isolate regions
 %-------------------------------------------------------------------------%
@@ -53,7 +54,7 @@ ShowMe_isolate(map, regs);
 
 % Get number of regions
 %-------------------------------------------------------------------------%
-num_regs = [1105 116 48];
+num_regs = [1105 116 170 48];
 num_regs = num_regs(map);
 num_digs = ceil(log10(num_regs+1));
 R = numel(regs);

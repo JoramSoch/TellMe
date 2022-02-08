@@ -26,7 +26,7 @@ for i = 1:num_regs
         xyz_cent(i,1:3) = mean(XYZ(:,M==i & XYZ(1,:)<0),2)';
         xyz_cent(i,4:6) = mean(XYZ(:,M==i & XYZ(1,:)>0),2)';
     else
-        xyz_cent(i,1:6) = [-150 -150 -150 -150 -150 -150];
+        xyz_cent(i,1:6) = [NaN, NaN, NaN, NaN, NaN, NaN];
     end;
 end;
 

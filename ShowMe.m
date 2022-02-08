@@ -15,11 +15,12 @@ function ShowMe(varargin)
 % Exemplary usage:
 %     ShowMe Tal 1:10
 %     ShowMe AAL 35 36 37 38
+%     ShowMe AAL3 41 42 43 44
 %     ShowMe BA 1:3 [5,7] [4,6]
 % 
 % Author: Joram Soch, BCCN Berlin
 % E-Mail: joram.soch@bccn-berlin.de
-% Date  : 28/01/2016, 10:00
+% Date  : 28/01/2016, 10:00 / 08/02/2022, 14:52
 
 
 % 0-1 input arguments
@@ -45,7 +46,8 @@ end;
 function map_num = str2map(map_str)
 
 switch map_str
-    case 'Tal', map_num = 1;
-    case 'AAL', map_num = 2;
-    case 'BA',  map_num = 3;
+    case 'Tal',  map_num = 1;
+    case 'AAL',  map_num = 2;
+    case 'AAL3', map_num = 3;
+    case 'BA',   map_num = 4;
 end;

@@ -9,8 +9,9 @@ function TellMe(varargin)
 %     ncr1 - the number of closest regions (by voxel coordinates) to show
 %     ncr2 - the number of closest regions (by center coordinates) to show
 % 
-% (0) FORMAT TellMe   fetches x, y, z from the SPM results window, sets
-% map = 'AAL', ncr1 = 10, ncr2 = 10 and calls TellMe_analysis.
+% (0) FORMAT TellMe   fetches x, y, z from the SPM results window, sets map
+% to the selected favorite map (see TellMe_config), ncr1 = 10, ncr2 = 10
+% and calls TellMe_analysis.
 % 
 % (1) FORMAT TellMe map   fetches x, y, z from the SPM results window, sets
 % ncr1 = 10, ncr2 = 10 and calls TellMe_analysis.
@@ -43,7 +44,7 @@ function TellMe(varargin)
 % 
 % Author: Joram Soch, BCCN Berlin
 % E-Mail: joram.soch@bccn-berlin.de
-% Date  : 14/01/2016, 04:50
+% Date  : 14/01/2016, 04:50 / 08/02/2022, 11:03
 
 
 % 0-3 input arguments
@@ -130,7 +131,8 @@ end;
 function map_num = str2map(map_str)
 
 switch map_str
-    case 'Tal', map_num = 1;
-    case 'AAL', map_num = 2;
-    case 'BA',  map_num = 3;
+    case 'Tal',  map_num = 1;
+    case 'AAL',  map_num = 2;
+    case 'AAL3', map_num = 3;
+    case 'BA',   map_num = 4;
 end;

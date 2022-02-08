@@ -8,7 +8,7 @@ function TellMe_config
 % 
 % Author: Joram Soch, BCCN Berlin
 % E-Mail: joram.soch@bccn-berlin.de
-% Date  : 14/01/2016, 12:35
+% Date  : 14/01/2016, 12:35 / 08/02/2022, 11:04
 
 
 % Get home directory
@@ -22,7 +22,7 @@ temp_img = fullfile(spm('Dir'),'canonical','single_subj_T1.nii');
 
 % Get favorite brain map
 %-------------------------------------------------------------------------%
-fav_map  = spm_input('Which is your favorite brain atlas?',1,'b',{'Talairach','AAL','Brodmann'},[1 2 3]);
+fav_map  = spm_input('Which is your favorite brain atlas?',1,'b',{'Talairach','AAL','AAL V3','Brodmann'},[1 2 3 4]);
 
 % Save dir, map and template
 %-------------------------------------------------------------------------%
